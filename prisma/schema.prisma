@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Object {
+  id             String           @id @default(cuid())
+  name           String
+  TaxonomyObject TaxonomyObject[]
+  data           Json // store custom field values
+  Comment        Comment[]
+}
+
+model TaxonomyObject {
+  taxonomyId String
+  taxonomy   Taxonomy @relation(fields: [taxonomyId], references: [id])
+  objectId   String
+  object     Object   @relation(fields: [objectId], references: [id])
+
+  @@id([taxonomyId, objectId])
+}
+
+model Taxonomy {
+  id             String           @id @default(cuid())
+  name           String
+  parentId       String?
+  parent         Taxonomy?        @relation(name: "hierarchy", fields: [parentId], references: [id])
+  children       Taxonomy[]       @relation(name: "hierarchy")
+  TaxonomyObject TaxonomyObject[]
+  context        String // eg. "accession register"
+}
+
+enum FieldType {
+  text
+  textarea
+  map
+}
+
+model CustomField {
+  id       String    @id @default(cuid())
+  name     String
+  type     FieldType
+  required Boolean   @default(false)
+}
+
+enum WorkflowType {
+  createObject
+  editObject
+}
+
+model Workflow {
+  id    String       @id @default(cuid())
+  name  String
+  type  WorkflowType
+  steps Json // store array of steps with the field names to populate
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  objectId  String
+  object    Object   @relation(fields: [objectId], references: [id])
+  createdAt DateTime @default(now())
+}

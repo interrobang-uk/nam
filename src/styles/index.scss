@@ -1,0 +1,72 @@
+.field {
+  &__label {
+    display: block;
+  }
+
+  &__optional {
+    font-size: 0.8rem;
+    margin-left: .5rem;
+  }
+
+  &--required label:after {
+    content: "*";
+  }
+}
+
+.mapppp>div {
+  height: 100%;
+}
+
+
+$black: rgb(33, 37, 41);
+
+
+.timeline {
+  list-style: none;
+  position: relative;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 1.2rem;
+    height: 10px;
+    transform: translateY(2px);
+  }
+
+  li {
+    margin-bottom: 1rem;
+    padding-left: .5rem;
+    position: relative;
+
+    // node
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: -2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+      border: 1px solid $black;
+      border-radius: 100%;
+      transform: translateY(2px);
+      background-color: white;
+    }
+
+    // stick
+    &+li:after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: -1.45rem;
+      bottom: 2.5rem;
+      width: 1px;
+      height: 100%;
+      border-left: 1px solid $black;
+      z-index: -1;
+    }
+
+  }
+}
